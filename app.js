@@ -26,7 +26,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(progress));storageOK
 function required(id){return ['bottle','buffer','rtos'].includes(id)?['baseline','extra','fixed']:['baseline','fixed'];}
 function capture(flag,label,evidence){const r=rec();r.checks[flag]=true;r.snapshots.push({label,evidence});r.snapshots=r.snapshots.slice(-12);save();}
 function init(id){if(id==='race')sim=Models.race(false);if(id==='dead')sim=Models.deadlock(false);if(id==='bottle')sim={cores:1,disk:6,result:null};if(id==='files')sim={policy:'original',result:null};if(id==='buffer')sim={capacity:2,policy:'drop',cut:false,result:null};if(id==='rtos')sim={priority:'telemetry',samples:2,result:null};}
-function nav(id){current=id;feedback='';if(cases.some(c=>c.id===id))init(id);render();document.body.classList.remove('menuopen');window.scrollTo(0,0);}
+function nav(id){current=id;feedback='';if(cases.some(c=>c.id===id))init(id);render();document.body.classList.remove('menuopen');$('menu').setAttribute('aria-expanded','false');window.scrollTo(0,0);}
 function metrics(arr){return `<div class="metrics">${arr.map(([k,v])=>`<div class="metric"><span>${k}</span><strong>${v}</strong></div>`).join('')}</div>`;}
 function trace(lines){return lines.length?`<ol class="trace" aria-label="Execution trace">${lines.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:'<p class="empty">Run the model to collect an execution trace.</p>';}
 function select(id,label,values,value){return `<div><label for="${id}">${label}</label><select id="${id}">${values.map(([v,t])=>`<option value="${v}" ${String(v)===String(value)?'selected':''}>${t}</option>`).join('')}</select></div>`;}
@@ -85,3 +85,6 @@ $('export').onclick=exportJSON;$('import').onclick=()=>$('file').click();
 $('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>2000000)throw Error('File is too large. Use an exported progress JSON file.');const p=validateImport(JSON.parse(await f.text()));if(confirm('Replace this browser’s current OS Lab progress with the imported record? Export your current work first if needed.')){progress=p;init(current);render();$('message').textContent='Progress imported.';}}catch(err){$('message').textContent='Import failed: '+err.message;}e.target.value='';};
 $('rename').onclick=()=>{const name=prompt('Name or alias for your evidence (stored only in this browser):',progress.name);if(name!==null){progress.name=name.slice(0,80);render();}};
 init('race');render();
+let printDetails=[];
+window.addEventListener('beforeprint',()=>{printDetails=[...document.querySelectorAll('details:not([open])')];printDetails.forEach(d=>d.open=true);});
+window.addEventListener('afterprint',()=>{printDetails.forEach(d=>d.open=false);printDetails=[];});
