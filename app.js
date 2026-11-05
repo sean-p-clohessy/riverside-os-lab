@@ -88,3 +88,19 @@ init('race');render();
 let printDetails=[];
 window.addEventListener('beforeprint',()=>{printDetails=[...document.querySelectorAll('details:not([open])')];printDetails.forEach(d=>d.open=true);});
 window.addEventListener('afterprint',()=>{printDetails.forEach(d=>d.open=false);printDetails=[];});
+
+// First-visit guidance is separate from learner evidence and can always be reopened.
+const guideSteps=[
+ ['Welcome to Riverside OS Lab','This is a simulated operating-system workspace. You will deliberately reproduce faults, change a setting, and explain what happens. Nothing you do here changes a real computer.','Start with the investigation your tutor names. Week 6 uses OS-601 to OS-603; Week 7 uses OS-701 to OS-703. You do not need to understand every term before you begin.'],
+ ['Read, predict, run','Read the scenario and Investigation brief first. Predict what will happen, then use the Run button. The numbers and execution trace show what the model actually did.','For OS-601, leave Protection on No lock and select Run competing workers. Each worker adds one: does the final counter match your prediction? Step worker A and Step worker B let you inspect individual operations after resetting the model.'],
+ ['Change one thing and explain','Change a setting and run again. Compare the result with your first run. The checklist records the required experiments; the Evidence notebook keeps snapshots automatically. Reset model keeps your evidence.','For OS-601, try Mutex around full update. Then write your explanation under Explain your evidence, choose a conclusion and select Check investigation. Use the diagnostic hint if stuck. Points record practice completion; your tutor reviews the quality of your explanation.'],
+ ['Save your work before leaving','Your work is saved in this browser only. Use Set name / alias to label it. Export progress downloads a JSON backup; Import progress restores that backup on another computer.','Use Session report to download evidence for your tutor or print to PDF. Export before changing computers or clearing browser data. Reopen these instructions at any time using Quick start or How to use this lab.']
+];
+const guide=document.createElement('dialog');guide.className='guide';guide.setAttribute('aria-labelledby','guideTitle');document.body.append(guide);
+let guideStep=0,guideReturn=null;
+function drawGuide(){const [title,body,detail]=guideSteps[guideStep];guide.innerHTML=`<p class="small">QUICK START / ${guideStep+1} OF ${guideSteps.length}</p><h2 id="guideTitle" tabindex="-1">${title}</h2><p>${body}</p><p class="notice">${detail}</p><div class="controls"><button id="guideBack" ${guideStep===0?'disabled':''}>Back</button><button id="guideNext" class="primary">${guideStep===guideSteps.length-1?'Start investigating':'Next'}</button><button id="guideClose">Close guide</button></div>`;$('guideBack').onclick=()=>{guideStep--;drawGuide();};$('guideNext').onclick=()=>{if(guideStep===guideSteps.length-1)guide.close();else{guideStep++;drawGuide();}};$('guideClose').onclick=()=>guide.close();$('guideTitle').focus();}
+function openGuide(){guideReturn=document.activeElement;guideStep=0;drawGuide();guide.showModal();$('guideTitle').focus();}
+guide.addEventListener('close',()=>{try{localStorage.setItem('riverside-os-guide-v1','seen');}catch{}if(guideReturn?.isConnected)guideReturn.focus();});
+$('help').onclick=openGuide;$('helpTop').onclick=openGuide;
+let guideSeen=false;try{guideSeen=localStorage.getItem('riverside-os-guide-v1')==='seen';}catch{}
+if(!guideSeen)openGuide();

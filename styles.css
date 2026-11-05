@@ -33,3 +33,8 @@ header.case>button{flex:none;white-space:nowrap}
 }
 
 @media(max-width:1000px){header.case{display:block}header.case>button{margin-top:8px}}
+
+.guide{width:min(680px,calc(100% - 28px));max-height:calc(100dvh - 32px);overflow:auto;background:#0000aa;color:#ffffff;border:3px double #aaaaaa;padding:26px;font:16px/1.6 var(--font)}
+.guide::backdrop{background:rgba(0,0,0,.8)}.guide h2{color:#ffff55;font-size:24px}.guide .small{color:#ffffff}.guide .notice{background:#000;color:#fff}.guide .controls{margin-bottom:0}.guide h2:focus{outline:none}
+@media(max-width:700px){.guide{padding:18px}.guide .controls button{flex:auto}}
+@media print{.guide{display:none!important}}
