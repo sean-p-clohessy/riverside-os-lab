@@ -82,6 +82,30 @@ html[data-theme]:not([data-theme=dos]) button.primary{background:var(--accent);c
 }
 
 @media screen{html[data-theme]:not([data-theme=dos]) aside .utility button{background:var(--button);color:var(--text);border-color:var(--line)}}
+
+/* Native-style controls; ID in :is keeps states above the shared theme defaults. */
+@media screen{
+html[data-theme=xp]{--ctl:linear-gradient(#fff,#f3f1e7 48%,#ece9d8);--ctl-hover:linear-gradient(#fff,#fff1ce);--ctl-down:linear-gradient(#d9d5c6,#eeeadd);--ctl-edge:#003c74;--ctl-hot:#e59700;--ctl-shadow:inset 1px 1px #fff,inset -1px -1px #c2bca7;--ctl-radius:3px}
+html[data-theme=seven]{--ctl:linear-gradient(#fff 0%,#f1f1f1 48%,#e4e4e4 49%,#ececec);--ctl-hover:linear-gradient(#f3fbff 0%,#e3f4fc 48%,#c4e5f6 49%,#dbf3ff);--ctl-down:linear-gradient(#cee5f1,#a9d5ec);--ctl-edge:#707070;--ctl-hot:#3c7fb1;--ctl-shadow:inset 0 0 0 1px #fff,0 1px 1px #00000014;--ctl-radius:3px}
+html[data-theme=linux]{--ctl:linear-gradient(#fff,#e9e5e2);--ctl-hover:linear-gradient(#fff,#f5f2ef);--ctl-down:linear-gradient(#d0c9c3,#e1dbd5);--ctl-edge:#a39b95;--ctl-hot:#a8340c;--ctl-shadow:inset 0 1px #fff,0 1px 2px #00000016;--ctl-radius:5px}
+html[data-theme=dos]{--ctl:#aaa;--ctl-hover:#55ffff;--ctl-down:#00aaaa;--ctl-edge:#aaa;--ctl-hot:#ffff55;--ctl-shadow:none;--ctl-radius:0}
+html[data-theme] body :is(button,#themeButton){background:var(--ctl);color:#161616;border:1px solid var(--ctl-edge);border-radius:var(--ctl-radius);box-shadow:var(--ctl-shadow);opacity:1;text-shadow:none}
+html[data-theme] body :is(button,#themeButton):hover:not(:disabled){background:var(--ctl-hover);border-color:var(--ctl-hot)}
+html[data-theme] body :is(button,#themeButton):is(:active,[aria-pressed=true]):not(:disabled){background:var(--ctl-down);box-shadow:inset 1px 2px 3px #00000030;border-color:var(--ctl-edge)}
+html[data-theme] body :is(button,#themeButton):focus-visible{outline:2px dotted var(--ctl-hot);outline-offset:3px}
+html[data-theme] body :is(button,#themeButton):disabled{background:#e8e5df;color:#777;border-color:#bbb;box-shadow:none;cursor:not-allowed}
+html:is([data-theme=xp],[data-theme=seven]) body :is(button,#themeButton).primary{border:2px solid #316ac5;padding:8px 13px;box-shadow:inset 0 0 0 1px #fff}
+html[data-theme=linux] body :is(button,#themeButton).primary{background:linear-gradient(#dc591f,#b63d12);color:#fff;border-color:#96300b}
+html[data-theme=linux] body :is(button,#themeButton).primary:hover{background:linear-gradient(#e4672d,#c44a18)}
+html[data-theme=linux] body :is(button,#themeButton).primary:active{background:#a8340c;box-shadow:inset 0 2px 3px #682009}
+html[data-theme] body nav :is(button,#themeButton){background:transparent;color:var(--text);border:0;box-shadow:none;border-radius:0}
+html[data-theme] body nav :is(button,#themeButton):is(:hover,[aria-current=page]){background:var(--selected,#00aaaa);color:var(--text);box-shadow:none}
+html[data-theme=dos] body nav :is(button,#themeButton):is(:hover,[aria-current=page]){color:#000}
+html[data-theme=dos] body :is(button,#themeButton):disabled{background:#000;color:#aaa;border-color:#555}
+html[data-theme=dos] body :is(button,#themeButton):active{box-shadow:none}
+html[data-theme=dos] body button:not(.theme-choice):not(nav button)::before{content:'[ '}
+html[data-theme=dos] body button:not(.theme-choice):not(nav button)::after{content:' ]'}
+}
 </style></head><body><a class="skip" href="#main">Skip to investigation</a><div class="shell"><aside><div class="brand"><span>R/</span> Riverside OS Lab</div><div class="scope">Operating Systems · Level 5<br>Unit 50 / Weeks 6 &amp; 7</div><nav id="nav" aria-label="Investigations"></nav><div class="utility"><button id="help">How to use this lab</button><button id="rename">Set name / alias</button><button id="export">Export progress</button><button id="import">Import progress</button><input id="file" type="file" accept=".json,application/json" hidden><a href="resources.html">Teaching resources</a></div></aside><div><div class="top"><button id="menu" class="menu" aria-expanded="false">Menu</button><button id="themeButton" aria-haspopup="dialog">Theme: MS-DOS</button><button id="helpTop">Quick start</button><span class="identity" id="learner">Learner workspace</span><strong id="points">0 / 600 pts</strong><span id="saveState" class="saved"></span></div><div id="message" role="status"></div><main id="main" class="workspace" tabindex="-1"></main><footer>Teaching simulation · No real systems are changed · Evidence stays in this browser</footer></div></div><noscript><p>This lab requires JavaScript. Use the teaching resources for printable explanations and worked examples.</p></noscript><script>/* Original, deterministic teaching models. No real processes or files are changed. */
 const Models = (() => {
  function race(locked=false){return {locked,value:0,owner:null,pc:[0,0],local:[null,null],log:[]};}
