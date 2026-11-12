@@ -36,7 +36,7 @@ const Models = (() => {
   const x=policy==='group'||policy==='everyone',r=x,guest=policy==='everyone';
   const log=['Application: open /shared/report.txt for reading','Kernel: resolve / (search allowed)'];
   if(!x)log.push('Kernel: /shared lacks group search (x) → EACCES; no device request');
-  else {log.push('Kernel: /shared group search (x) allowed','Kernel: report.txt group read (r) allowed','Cache miss assumed → file-system block lookup','Driver: submit device request; caller waits','Device completion interrupt → caller becomes ready','read returns the requested bytes');}
+  else {log.push('Kernel: /shared group search (x) allowed','Kernel: report.txt group read (r) allowed','open succeeds → application requests read; cache miss assumed → file-system block lookup','Driver: submit device request; caller waits','Device completion interrupt → caller becomes ready','read returns the requested bytes');}
   return {policy,allowed:x&&r,guestAllowed:guest,log};
  }
  function buffer(capacity=2,policy='drop',cut=false){
